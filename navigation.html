@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导航界面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: url('background.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .nav-container {
+            display: grid;
+            grid-template-columns: 4fr 1fr;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+
+        .welcome-header {
+            grid-column: 1 / 2;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            font-size: 24px;
+            color: white;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .games-section {
+            grid-column: 1 / 2;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+
+        .game-btn {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            max-width: 120px;
+            margin: 0 auto;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-1 { background: linear-gradient(135deg, #43cea2, #185a9d); }
+        .game-2 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .game-3 { background: linear-gradient(135deg, #ff6b6b, #ee0979); }
+        .game-4 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .game-5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .leaderboard h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            text-align: center;
+            color: white;
+        }
+
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .leaderboard th, .leaderboard td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard th {
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .music-player {
+            grid-column: 2 / 3;
+            grid-row: 1 / span 7;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .music-player h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+        }
+
+        .search-container input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-container button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+        }
+
+        .music-info {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            height: 4px;
+            width: 100%;
+        }
+
+        .progress {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+            border-radius: 5px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .playlist {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .playlist-item {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .playlist-item.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 已移除歌曲封面图片样式 */
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .song-artist {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 4px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+
+        .player-placeholder {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn {
+            float: right;
+            background: linear-gradient(135deg, #ff6b6b, #ee0979);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 管理员登录模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, rgba(40, 40, 80, 0.8), rgba(30, 30, 60, 0.9));
+            backdrop-filter: blur(15px);
+            margin: 8% auto;
+            padding: 35px 40px;
+            width: 420px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: modalFadeIn 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            color: white;
+            text-align: center;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+        
+        .modal-content .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-content input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-content input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .modal-content .button-group {
+            margin-top: 30px;
+        }
+        
+        .modal-content .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #6e8efb, #4a6cf7);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(74, 108, 247, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .modal-content .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(74, 108, 247, 0.4);
+            background: linear-gradient(135deg, #5d7ef9, #3a5cf6);
+        }
+        
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-30px) scale(0.95);}
+            to {opacity: 1; transform: translateY(0) scale(1);}
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        @media (max-width: 1200px) {
+            .nav-container {
+                grid-template-columns: 1fr;
+            }
+            .games-section {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .music-player {
+                grid-column: 1;
+                grid-row: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                grid-template-columns: 1fr;
+            }
+            .games-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .music-player {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <!-- 管理员登录模态框 -->
+        <div id="adminModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>管理员登录</h2>
+                <form id="adminForm">
+                    <div class="form-group">
+                        <input type="text" id="admin-username" placeholder="请输入管理员账号" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="admin-password" placeholder="请输入管理员密码" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="login-btn">登录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <header class="welcome-header">
+            Hi！Welcome to gamecenter！<span id="username">用户名</span>
+            <button id="admin-btn" class="admin-btn">后台管理</button>
+        </header>
+        <section class="games-section">
+            <button class="game-btn game-1" onclick="window.location.href='combined-snake.html'">贪吃蛇</button>
+            <button class="game-btn game-2" onclick="window.location.href='minesweeper.html'">扫雷</button>
+            <button class="game-btn game-3" onclick="window.location.href='tetris.html'">俄罗斯方块</button>
+            <button class="game-btn game-4" onclick="window.location.href='shooting-game.html'">射击训练</button>
+            <button class="game-btn game-5" onclick="window.location.href='balance-ball.html'">平衡球</button>
+        </section>
+        <section class="leaderboard">
+            <h3>游戏1排行榜</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户名</th>
+                        <th>分数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>玩家A</td><td>1000</td></tr>
+                    <tr><td>2</td><td>玩家B</td><td>950</td></tr>
+                    <tr><td>3</td><td>玩家C</td><td>900</td></tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="leaderboard">
+            <h3>游戏2排行榜</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户名</th>
+                        <th>分数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>玩家D</td><td>880</td></tr>
+                    <tr><td>2</td><td>玩家E</td><td>820</td></tr>
+                    <tr><td>3</td><td>玩家F</td><td>780</td></tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="leaderboard">
+            <h3>游戏3排行榜</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户名</th>
+                        <th>分数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>玩家G</td><td>920</td></tr>
+                    <tr><td>2</td><td>玩家H</td><td>850</td></tr>
+                    <tr><td>3</td><td>玩家I</td><td>800</td></tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="leaderboard">
+            <h3>游戏4排行榜</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户名</th>
+                        <th>分数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>玩家J</td><td>960</td></tr>
+                    <tr><td>2</td><td>玩家K</td><td>890</td></tr>
+                    <tr><td>3</td><td>玩家L</td><td>840</td></tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="leaderboard">
+            <h3>游戏5排行榜</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户名</th>
+                        <th>分数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>玩家M</td><td>930</td></tr>
+                    <tr><td>2</td><td>玩家N</td><td>870</td></tr>
+                    <tr><td>3</td><td>玩家O</td><td>810</td></tr>
+                </tbody>
+            </table>
+        </section>
+        <aside class="music-player">
+            <h3>音乐播放器</h3>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="搜索音乐..." />
+                <button id="search-btn">🔍</button>
+            </div>
+            <div class="music-info">
+                <div id="song-title">未播放</div>
+                <div id="song-artist">-</div>
+            </div>
+            <div class="progress-container" id="progress-container">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="player-controls">
+                <button class="control-btn" id="prev-btn">⏮</button>
+                <button class="control-btn play-btn" id="play-btn">▶</button>
+                <button class="control-btn" id="next-btn">⏭</button>
+            </div>
+            <div class="volume-container">
+                <span>🔈</span>
+                <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="70">
+                <span>🔊</span>
+            </div>
+            <div class="playlist" id="playlist">
+                <!-- 播放列表将通过API动态生成 -->
+            </div>
+        </aside>
+    </div>
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            if (username) {
+                document.getElementById('username').textContent = username;
+            }
+            
+            // 管理员模态框相关逻辑
+            const adminModal = document.getElementById('adminModal');
+            const adminBtn = document.getElementById('admin-btn');
+            const closeBtn = document.querySelector('.close');
+            
+            // 点击后台管理按钮打开模态框
+            adminBtn.addEventListener('click', function() {
+                adminModal.style.display = 'block';
+            });
+            
+            // 点击关闭按钮关闭模态框
+            closeBtn.addEventListener('click', function() {
+                adminModal.style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭模态框
+            window.addEventListener('click', function(event) {
+                if (event.target == adminModal) {
+                    adminModal.style.display = 'none';
+                }
+            });
+            
+            // 管理员登录表单提交处理
+            document.getElementById('adminForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const adminUsername = document.getElementById('admin-username').value;
+                const adminPassword = document.getElementById('admin-password').value;
+                
+                // 验证管理员账号密码
+                if (adminUsername === 'root' && adminPassword === 'root123') {
+                    // 登录成功，跳转到后台管理页面
+                    window.location.href = 'admin.html';
+                } else {
+                    // 登录失败
+                    alert('管理员账号或密码错误！');
+                }
+            });}
+
+            // 音乐播放器功能
+            const musicPlayer = {
+                currentSong: null,
+                isPlaying: false,
+                audio: new Audio(),
+                playlist: [],
+                currentIndex: 0,
+
+                init: function() {
+                    this.audio.volume = 0.7; // 默认音量
+                    this.setupEventListeners();
+                    this.fetchMusic();
+                },
+
+                setupEventListeners: function() {
+                    const playBtn = document.getElementById('play-btn');
+                    const prevBtn = document.getElementById('prev-btn');
+                    const nextBtn = document.getElementById('next-btn');
+                    const progressContainer = document.getElementById('progress-container');
+                    const volumeSlider = document.getElementById('volume-slider');
+                    const searchBtn = document.getElementById('search-btn');
+                    const searchInput = document.getElementById('search-input');
+
+                    // 添加音频加载状态监听
+                    this.audio.addEventListener('canplay', () => {
+                        console.log(`歌曲已准备好播放: ${this.currentSong?.title || '未知歌曲'}`);
+                    });
+                    
+                    playBtn.addEventListener('click', () => this.togglePlay());
+                    prevBtn.addEventListener('click', () => this.prevSong());
+                    nextBtn.addEventListener('click', () => this.nextSong());
+                    
+                    progressContainer.addEventListener('click', (e) => {
+                        const width = progressContainer.clientWidth;
+                        const clickX = e.offsetX;
+                        const duration = this.audio.duration;
+                        this.audio.currentTime = (clickX / width) * duration;
+                    });
+
+                    this.audio.addEventListener('timeupdate', () => this.updateProgress());
+                    this.audio.addEventListener('ended', () => this.nextSong());
+                    
+                    volumeSlider.addEventListener('input', (e) => {
+                        const volume = e.target.value / 100;
+                        this.audio.volume = volume;
+                    });
+
+                    searchBtn.addEventListener('click', () => {
+                        const query = searchInput.value.trim();
+                        if (query) this.searchMusic(query);
+                    });
+
+                    searchInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            const query = searchInput.value.trim();
+                            if (query) this.searchMusic(query);
+                        }
+                    });
+                },
+
+                fetchMusic: function() {
+                    // 模拟从API获取音乐数据
+                    // 实际应用中，这里应该是一个fetch请求到真实的音乐API
+                    // 添加本地备用音乐，确保至少有一些歌曲可以播放
+                    const demoPlaylist = [
+                        {
+                            id: 1,
+                            title: 'Enthusiast',
+                            artist: 'Tours',
+                            cover: 'https://p2.music.126.net/55AMGVtPzGFzvL7jQqQ7GA==/109951166361039007.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3'
+                        },
+                        {
+                            id: 2,
+                            title: 'Sentinel',
+                            artist: 'Kai Engel',
+                            cover: 'https://p2.music.126.net/wSMfGvFzOA0nCLVEO7heew==/109951163300149472.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Satin/Kai_Engel_-_04_-_Sentinel.mp3'
+                        },
+                        {
+                            id: 3,
+                            title: 'Shipping Lanes',
+                            artist: 'Chad Crouch',
+                            cover: 'https://p1.music.126.net/diGAyEmpymX8G7JcnElncQ==/109951163699673355.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3'
+                        },
+                        {
+                            id: 4,
+                            title: 'Night Owl',
+                            artist: 'Broke For Free',
+                            cover: 'https://p2.music.126.net/LiU5CHB7sCyRWyoiGj7l_w==/109951163941969846.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3'
+                        },
+                        {
+                            id: 5,
+                            title: 'Enthusiast',
+                            artist: 'Tours',
+                            cover: 'https://p2.music.126.net/SJb_jYQ8AhX0BnVkTQAbYw==/109951163097691229.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3'
+                        },
+                        {
+                            id: 6,
+                            title: 'Shipping Lanes',
+                            artist: 'Chad Crouch',
+                            cover: 'https://p2.music.126.net/8y8KJC1QhHNPWTKvYP7j0A==/109951165566399149.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3'
+                        },
+                        {
+                            id: 7,
+                            title: 'Sentinel',
+                            artist: 'Kai Engel',
+                            cover: 'https://p1.music.126.net/MJdmNzZwTCz0b4IpHJV6Wg==/109951165611515723.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Satin/Kai_Engel_-_04_-_Sentinel.mp3'
+                        },
+                        {
+                            id: 8,
+                            title: 'Night Owl',
+                            artist: 'Broke For Free',
+                            cover: 'https://p1.music.126.net/9ajqXSJJvUzJiRvJVBLIXQ==/109951166562840678.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3'
+                        },
+                        {
+                            id: 9,
+                            title: 'Enthusiast',
+                            artist: 'Tours',
+                            cover: 'https://p2.music.126.net/yjVbsgfNeF2h7fIvnxuZDQ==/109951165793869641.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3'
+                        },
+                        {
+                            id: 10,
+                            title: 'Shipping Lanes',
+                            artist: 'Chad Crouch',
+                            cover: 'https://p1.music.126.net/BRBLu2YE8fqeEL-4bxXTXA==/109951166361039007.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3'
+                        },
+                        {
+                            id: 11,
+                            title: 'Night Owl',
+                            artist: 'Broke For Free',
+                            cover: 'https://p2.music.126.net/W_5XiCv3rGS1-J7EXpHSCQ==/18885211718782327.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3'
+                        },
+                        {
+                            id: 12,
+                            title: 'Sentinel',
+                            artist: 'Kai Engel',
+                            cover: 'https://p2.music.126.net/wldFtES1CxqmX3YJXGkV6g==/18876415625841069.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Satin/Kai_Engel_-_04_-_Sentinel.mp3'
+                        },
+                        {
+                            id: 13,
+                            title: 'Enthusiast',
+                            artist: 'Tours',
+                            cover: 'https://p2.music.126.net/9comYbCUPwf7ES04IdVFeA==/109951166361039007.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3'
+                        },
+                        {
+                            id: 14,
+                            title: 'Shipping Lanes',
+                            artist: 'Chad Crouch',
+                            cover: 'https://p2.music.126.net/9ajqXSJJvUzJiRvJVBLIXQ==/109951166562840678.jpg',
+                            url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3'
+                        },
+                        {
+                            id: 15,
+                            title: 'Night Owl',
+                            artist: 'Broke For Free',
+                            cover: 'https://p2.music.126.net/5QTnPSFC1qDySBV2JscB8g==/109951166361039007.jpg',
+                            url: 'https://files.freemusicarchive.org/storage'
+                        }
+                        ];
+
+                    this.playlist = demoPlaylist;
+                    this.renderPlaylist();
+                },
+
+                searchMusic: function(query) {
+                    // 模拟搜索功能
+                    // 实际应用中，这里应该是一个fetch请求到真实的音乐API的搜索接口
+                    console.log(`搜索: ${query}`);
+                    
+                    // 简单的模拟搜索结果
+                    const filteredPlaylist = this.playlist.filter(song => 
+                        song.title.toLowerCase().includes(query.toLowerCase()) || 
+                        song.artist.toLowerCase().includes(query.toLowerCase())
+                    );
+                    
+                    if (filteredPlaylist.length > 0) {
+                        this.renderSearchResults(filteredPlaylist);
+                    } else {
+                        alert('未找到相关音乐，请尝试其他关键词');
+                    }
+                },
+
+                renderSearchResults: function(results) {
+                    const playlistEl = document.getElementById('playlist');
+                    playlistEl.innerHTML = '';
+                    
+                    results.forEach((song, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'playlist-item';
+                        item.innerHTML = `
+                            <div class="song-info">
+                                <div class="song-title">${song.title}</div>
+                                <div class="song-artist">${song.artist}</div>
+                            </div>
+                        `;
+                        
+                        item.addEventListener('click', () => {
+                            this.currentIndex = index;
+                            this.loadSong(song);
+                            this.playSong();
+                        });
+                        
+                        playlistEl.appendChild(item);
+                    });
+                },
+
+                renderPlaylist: function() {
+                    const playlistEl = document.getElementById('playlist');
+                    playlistEl.innerHTML = '';
+                    
+                    this.playlist.forEach((song, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'playlist-item';
+                        if (this.currentSong && this.currentSong.id === song.id) {
+                            item.classList.add('active');
+                        }
+                        
+                        item.innerHTML = `
+                            <div class="song-info">
+                                <div class="song-title">${song.title}</div>
+                                <div class="song-artist">${song.artist}</div>
+                            </div>
+                        `;
+                        
+                        item.addEventListener('click', () => {
+                            this.currentIndex = index;
+                            this.loadSong(song);
+                            this.playSong();
+                        });
+                        
+                        playlistEl.appendChild(item);
+                    });
+                },
+
+                loadSong: function(song) {
+                    this.currentSong = song;
+                    this.audio.src = song.url;
+                    document.getElementById('song-title').textContent = song.title;
+                    document.getElementById('song-artist').textContent = song.artist;
+                    
+                    // 添加错误处理
+                    this.audio.onerror = () => {
+                        console.error(`无法加载歌曲: ${song.title}`);
+                        alert(`无法播放歌曲: ${song.title}，将自动播放下一首`);
+                        this.nextSong();
+                    };
+                    
+                    // 更新播放列表中的活动项
+                    const playlistItems = document.querySelectorAll('.playlist-item');
+                    playlistItems.forEach((item, index) => {
+                        if (index === this.currentIndex) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                },
+
+                playSong: function() {
+                    this.isPlaying = true;
+                    document.getElementById('play-btn').innerHTML = '⏸';
+                    this.audio.play();
+                },
+
+                pauseSong: function() {
+                    this.isPlaying = false;
+                    document.getElementById('play-btn').innerHTML = '▶';
+                    this.audio.pause();
+                },
+
+                togglePlay: function() {
+                    if (this.currentSong === null && this.playlist.length > 0) {
+                        this.loadSong(this.playlist[0]);
+                        this.playSong();
+                        return;
+                    }
+                    
+                    if (this.isPlaying) {
+                        this.pauseSong();
+                    } else {
+                        this.playSong();
+                    }
+                },
+
+                prevSong: function() {
+                    this.currentIndex--;
+                    if (this.currentIndex < 0) {
+                        this.currentIndex = this.playlist.length - 1;
+                    }
+                    this.loadSong(this.playlist[this.currentIndex]);
+                    this.playSong();
+                },
+
+                nextSong: function() {
+                    this.currentIndex++;
+                    if (this.currentIndex >= this.playlist.length) {
+                        this.currentIndex = 0;
+                    }
+                    this.loadSong(this.playlist[this.currentIndex]);
+                    this.playSong();
+                },
+
+                updateProgress: function() {
+                    const { currentTime, duration } = this.audio;
+                    const progressPercent = (currentTime / duration) * 100;
+                    document.getElementById('progress').style.width = `${progressPercent}%`;
+                }
+            };
+
+            // 初始化音乐播放器
+            musicPlayer.init();
+        
+    </script>
+</body>
+</html>
